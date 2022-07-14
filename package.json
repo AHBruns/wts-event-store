@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "proto:sync": "mkdir -p proto && curl https://raw.githubusercontent.com/AHBruns/wts-event-store-proto/main/proto/eventStore.proto > ./proto/eventStore.proto",
+    "proto:gen": "$(npm bin)/proto-loader-gen-types --outDir=./src/proto-gen --grpcLib=@grpc/grpc-js ./proto/eventStore.proto",
+    "build:proto": "pnpm run proto:sync && pnpm run proto:gen",
+    "build:js": "esbuild ./src/index.ts --platform=node --target=node16.15.1 --bundle --external:./node_modules/* --outfile=./dist/bundle.js",
+    "build": "pnpm run build:proto && pnpm run build:js",
+    "serve": "node ./dist/bundle.js",
+    "start": "pnpm run build && pnpm run serve"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.6.7",
+    "@grpc/proto-loader": "^0.6.13",
+    "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.49"
+  }
+}
